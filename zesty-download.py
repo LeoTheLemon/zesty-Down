@@ -1,5 +1,7 @@
 from pytube import YouTube
 import customtkinter
+import os
+
 panel = 0
 
 customtkinter.set_appearance_mode("dark")
@@ -11,16 +13,20 @@ app = customtkinter.CTk()
 app.title("Zesty Download")
 app.geometry("500x300")
 
-def Download():
- pass
 def getV():
     if link.get() != "":
+     
      ytLink = link.get()
      ytThing = YouTube(ytLink)
+
      screen = customtkinter.CTkToplevel(app)
      screen.title("Download")
      screen.geometry("500x300")
+
+     
+
      resolution =[str(i.split("p")[0]) for i in (list(dict.fromkeys([i.resolution for i in ytThing.streams if i.resolution])))]
+     
      def select():
        global vid
        vid = Options.get()
@@ -30,11 +36,23 @@ def getV():
        video = ytThing.streams.get_by_resolution(vid)
        video.download()
        done = customtkinter.CTkLabel(screen,text="Done!")
-       done.pack(pady= 10)                             
+       done.pack(pady= 10,padx=10)
+
+     def AudioOnly():
+       global vid
+       video = ytThing.streams.get_audio_only()
+       video.download()
+       done = customtkinter.CTkLabel(screen,text="Done!")
+       done.pack(pady= 10,padx=10)
+                                 
         
 
      Dbutton = customtkinter.CTkButton(screen, text= "Download", command= Down)
      Dbutton.pack(pady= 60)
+
+     Audio = customtkinter.CTkButton(screen,text= "Audio only",command= AudioOnly)
+     Audio.pack(pady=10,padx=20)
+
      Options = customtkinter.CTkOptionMenu(screen, values= resolution, command= select)
      Options.pack(pady=40)
        
@@ -42,6 +60,7 @@ def getV():
      screen = customtkinter.CTkToplevel(app)
      screen.title("Download")
      screen.geometry("500x300")
+
      NoLink = customtkinter.CTkLabel(screen,text= "ERROR please Enter a video link")
      NoLink.pack(pady= 40)
 
